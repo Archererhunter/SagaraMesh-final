@@ -80,6 +80,14 @@ SagaraMesh/
 ├── README.md
 ├── website/
 │   ├── index.html
+│   ├── map.html
+│   ├── weather.html
+│   ├── zones.html
+│   ├── distress.html
+│   ├── buoys.html
+│   ├── messages.html
+│   ├── reports.html
+│   ├── settings.html
 │   ├── IMPROVED_PROMPT.md
 │   └── assets/
 │       ├── styles.css
@@ -100,7 +108,7 @@ SagaraMesh/
 
 ## Dashboard Prototype
 
-A static OceanGuard-inspired SagaraMesh coastal operations dashboard is available in `website/`.
+A static OceanGuard-inspired SagaraMesh coastal operations dashboard is available in `website/`. It is now split into separate pages for Overview, Map, Weather, Fishing Zones, Distress, Buoys, Messages, Reports, and Settings.
 
 Preview locally:
 

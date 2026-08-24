@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Operations Overview | SagaraMesh</title>
+  <title>Distress Response | SagaraMesh</title>
   <meta name="description" content="SagaraMesh Tamil Nadu coastal operations dashboard prototype for fisherman SOS, buoy mesh, weather and rescue coordination." />
   <link rel="stylesheet" href="assets/styles.css" />
 </head>
-<body data-page="overview">
+<body data-page="distress">
   <div class="app-shell">
     <aside class="sidebar" aria-label="Primary navigation">
       <a class="brand" href="index.html" aria-label="SagaraMesh home">
@@ -15,11 +15,11 @@
         <span>SagaraMesh</span>
       </a>
       <nav class="nav-list">
-        <a class="nav-item active" href="index.html"><span class="">⌂</span> Overview</a>
+        <a class="nav-item " href="index.html"><span class="">⌂</span> Overview</a>
         <a class="nav-item " href="map.html"><span class="">🗺</span> Map</a>
         <a class="nav-item " href="weather.html"><span class="">⛅</span> Weather</a>
         <a class="nav-item " href="zones.html"><span class="">⚑</span> Fishing Zones</a>
-        <a class="nav-item " href="distress.html"><span class="sos-mini">SOS</span> Distress</a>
+        <a class="nav-item active" href="distress.html"><span class="sos-mini">SOS</span> Distress</a>
         <a class="nav-item " href="buoys.html"><span class="">⛯</span> Buoys</a>
         <a class="nav-item " href="messages.html"><span class="">✉</span> Messages</a>
         <a class="nav-item " href="reports.html"><span class="">▣</span> Reports</a>
@@ -49,7 +49,7 @@
       <section class="page-hero">
         <div>
           <span class="eyebrow">SagaraMesh Command Center</span>
-          <h1>Operations Overview</h1>
+          <h1>Distress Response</h1>
         </div>
         <a class="page-action" href="https://archererhunter.github.io/SagaraMesh-final/">Live Site</a>
       </section>
@@ -60,9 +60,10 @@
         <article class="stat-card split"><div><span>Active Buoys</span><strong>12 / 14</strong><em class="green">Online</em></div><div><span>Tracked Vessels</span><strong>24</strong><em>Near shore + offshore</em></div></article>
       </section>
 
-      <section class="content-grid multipage overview-page">
-        <section class="overview-layout">
-          <section class="map-panel panel">
+      <section class="content-grid multipage distress-page">
+        <section class="panel page-panel distress-page-panel"><h2>Active distress incident</h2><article class="distress-detail"><div class="sos-box large">SOS</div><div><h3>TN-09-FB-214</h3><p>Distress Signal • 09:38 IST • Off Cuddalore Coast • nearest relay BUOY-07</p><div class="action-row"><button class="danger-btn" id="respondBtn">Acknowledge Rescue</button><button class="ghost-btn" id="viewDistressBtn">Center on Map</button></div></div></article></section>
+        <section class="panel communications"><div class="panel-head"><h2>Recent Communications</h2><a href="#">View All</a></div><ol id="timeline"><li><time>09:40 IST</time><strong>Message sent to BUOY-07</strong><span>Status inquiry</span></li><li><time>09:36 IST</time><strong>Acknowledgement from BUOY-07</strong><span>All systems normal</span></li><li class="warn"><time>09:32 IST</time><strong>Weather alert received</strong><span>High wave warning for coastal belts</span></li><li><time>09:28 IST</time><strong>TN-09-FB-112 location update</strong><span>Position report received</span></li></ol></section>
+        <section class="map-panel panel">
           <div class="panel-head"><h1><span id="viewTitle">Live Maritime Map</span></h1><div class="live-dot"><i></i> Live</div><button class="icon-btn" id="resetMap" title="Reset selected asset">⛶</button></div>
           <div class="map-canvas" id="mapCanvas" role="application" aria-label="SagaraMesh live maritime map">
             <svg class="sea-map" viewBox="0 0 1000 560" preserveAspectRatio="none" aria-hidden="true">
@@ -111,27 +112,6 @@
             <div class="legend"><strong>Legend</strong><span><i class="swatch permitted"></i> Permitted Fishing Zone</span><span><i class="swatch restricted"></i> Restricted Zone</span><span><i class="swatch risk"></i> Weather Risk Area</span><span>⛯ Active Buoy</span><span>🚤 Fishing Vessel</span><span><b>SOS</b> Distress Alert</span></div>
             <div class="zoom-controls"><button>+</button><button>−</button><button>⌾</button></div>
           </div>
-        </section>
-          <aside class="right-rail">
-          <section class="panel warnings"><div class="panel-head"><h2>⚠ Marine Warnings</h2><a href="#">View All</a></div>
-            <article class="warning high"><div class="warning-icon">↟↟</div><div><strong>High Wave Warning</strong><p>Significant wave height 3.5 – 4.5 m<br>Off Tamil Nadu Coast</p><small>Valid until 25 Aug 06:00 IST</small></div><span>HIGH</span></article>
-            <article class="warning moderate"><div class="warning-icon">⛈</div><div><strong>Thunderstorm Advisory</strong><p>Gusty winds over Bay of Bengal</p><small>Valid until 24 Aug 16:00 IST</small></div><span>MODERATE</span></article>
-          </section>
-
-          <section class="panel distress-card"><div class="panel-head"><h2>Nearby Distress</h2><a href="#">View All</a></div>
-            <article><div class="sos-box">SOS</div><div><strong>TN-09-FB-214 • 3.2 km</strong><p>Distress Signal • 09:38 IST<br>Off Cuddalore Coast</p></div><span class="signal">◖)))</span></article>
-            <div class="action-row"><button class="ghost-btn" id="viewDistressBtn">View</button><button class="danger-btn" id="respondBtn">Respond</button></div>
-          </section>
-
-          <section class="panel buoy-link"><div class="panel-head"><h2>Emergency Buoy Link ⓘ</h2><span class="online"><i></i> Online</span></div>
-            <div class="buoy-summary"><div class="buoy-avatar">⛯</div><strong id="selectedAsset">BUOY-07</strong><dl><dt>Signal Strength</dt><dd class="bars"><i></i><i></i><i></i><i></i><i></i><i></i></dd><dt>Battery</dt><dd>▰ 78%</dd><dt>Last Contact</dt><dd id="lastContact">09:42 IST</dd></dl></div>
-            <form class="message-form" id="messageForm"><input id="messageInput" placeholder="Type your message..." /><button>Send Message</button></form>
-            <button class="relay-btn" id="relayBtn">⚠ Trigger Emergency Relay</button>
-          </section>
-        </aside>
-          <section class="panel forecast"><h2>24-Hour Marine Weather Forecast</h2><div class="chart-legend"><span><i class="blue"></i> Wind Speed (km/h)</span><span><i class="cyan"></i> Wave Height (m)</span></div><svg class="chart" viewBox="0 0 720 220" aria-label="Marine forecast line chart"><g class="grid"><line x1="40" y1="20" x2="40" y2="180"/><line x1="40" y1="180" x2="690" y2="180"/><line x1="40" y1="126" x2="690" y2="126"/><line x1="40" y1="73" x2="690" y2="73"/><line x1="40" y1="20" x2="690" y2="20"/></g><polyline class="wind" points="80,126 160,116 240,104 320,90 400,94 480,110 560,124 640,120"/><polyline class="wave" points="80,157 160,148 240,139 320,130 400,134 480,145 560,154 640,157"/><g class="points"><circle cx="80" cy="126"/><circle cx="160" cy="116"/><circle cx="240" cy="104"/><circle cx="320" cy="90"/><circle cx="400" cy="94"/><circle cx="480" cy="110"/><circle cx="560" cy="124"/><circle cx="640" cy="120"/></g><g class="labels"><text x="62" y="205">09:00</text><text x="142" y="205">12:00</text><text x="222" y="205">15:00</text><text x="302" y="205">18:00</text><text x="382" y="205">21:00</text><text x="462" y="205">00:00</text><text x="542" y="205">03:00</text><text x="622" y="205">06:00</text></g><g class="values"><text x="72" y="116">22</text><text x="152" y="106">24</text><text x="232" y="94">26</text><text x="312" y="80">28</text><text x="392" y="84">27</text><text x="472" y="100">24</text><text x="552" y="114">22</text><text x="632" y="110">22</text><text class="cyan-text" x="72" y="148">1.2</text><text class="cyan-text" x="152" y="140">1.4</text><text class="cyan-text" x="232" y="131">1.6</text><text class="cyan-text" x="312" y="122">1.8</text></g></svg></section>
-          <section class="panel permission"><h2>Fishing Permission Status</h2><div class="permit-box"><div class="permit-head"><span>🛡</span><strong>Permitted until 18:30</strong><b>PERMITTED</b></div><dl><dt>Zone</dt><dd>Zone F-12</dd><dt>Coordinates</dt><dd>10°55′N – 11°25′N<br>79°30′E – 79°55′E</dd><dt>Valid Until</dt><dd>24 Aug 2026, 18:30 IST</dd></dl><p>✓ Compliant with coastal safety regulations</p></div></section>
-          <section class="panel communications"><div class="panel-head"><h2>Recent Communications</h2><a href="#">View All</a></div><ol id="timeline"><li><time>09:40 IST</time><strong>Message sent to BUOY-07</strong><span>Status inquiry</span></li><li><time>09:36 IST</time><strong>Acknowledgement from BUOY-07</strong><span>All systems normal</span></li><li class="warn"><time>09:32 IST</time><strong>Weather alert received</strong><span>High wave warning for coastal belts</span></li><li><time>09:28 IST</time><strong>TN-09-FB-112 location update</strong><span>Position report received</span></li></ol></section>
         </section>
       </section>
     </main>

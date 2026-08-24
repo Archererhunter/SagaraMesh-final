@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Buoy Network | SagaraMesh</title>
+  <meta name="description" content="SagaraMesh Tamil Nadu coastal operations dashboard prototype for fisherman SOS, buoy mesh, weather and rescue coordination." />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body data-page="buoys">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <a class="brand" href="index.html" aria-label="SagaraMesh home">
+        <span class="brand-mark">⚓</span>
+        <span>SagaraMesh</span>
+      </a>
+      <nav class="nav-list">
+        <a class="nav-item " href="index.html"><span class="">⌂</span> Overview</a>
+        <a class="nav-item " href="map.html"><span class="">🗺</span> Map</a>
+        <a class="nav-item " href="weather.html"><span class="">⛅</span> Weather</a>
+        <a class="nav-item " href="zones.html"><span class="">⚑</span> Fishing Zones</a>
+        <a class="nav-item " href="distress.html"><span class="sos-mini">SOS</span> Distress</a>
+        <a class="nav-item active" href="buoys.html"><span class="">⛯</span> Buoys</a>
+        <a class="nav-item " href="messages.html"><span class="">✉</span> Messages</a>
+        <a class="nav-item " href="reports.html"><span class="">▣</span> Reports</a>
+        <a class="nav-item " href="settings.html"><span class="">⚙</span> Settings</a>
+      </nav>
+      <section class="location-card">
+        <strong>11°16′N / 79°51′E</strong>
+        <span>Local Time</span>
+        <small id="dateLabel">24 Aug 2026</small>
+        <b id="clock">09:42:31 IST</b>
+      </section>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="operation-select"><span>⌖</span> Tamil Nadu Coastal Safety Grid <span>⌄</span></div>
+        <label class="search-box">
+          <span class="sr-only">Search vessels, buoys, zones</span>
+          <input id="assetSearch" type="search" placeholder="Search vessels, buoys, zones..." autocomplete="off" />
+          <span>⌕</span>
+        </label>
+        <div class="system-pill"><i></i> All Systems Operational</div>
+        <button class="bell" aria-label="Notifications">♢<sup>3</sup></button>
+        <div class="operator"><span class="avatar">●</span><div><strong>Operator</strong><small>Coastal Control</small></div><span>⌄</span></div>
+      </header>
+
+      <section class="page-hero">
+        <div>
+          <span class="eyebrow">SagaraMesh Command Center</span>
+          <h1>Buoy Network</h1>
+        </div>
+        <a class="page-action" href="https://archererhunter.github.io/SagaraMesh-final/">Live Site</a>
+      </section>
+
+      <section class="status-row" aria-label="System summary">
+        <article class="stat-card weather-card"><div class="stat-icon sun">☀️</div><div><span>Sea Weather</span><strong>28°C</strong><em>Moderate Sea</em></div></article>
+        <article class="stat-card"><div class="stat-icon satellite">🛰</div><div><span>Mesh + Sat Link</span><strong class="green">Connected</strong><em>LoRa mesh • Inmarsat gateway 92%</em></div></article>
+        <article class="stat-card split"><div><span>Active Buoys</span><strong>12 / 14</strong><em class="green">Online</em></div><div><span>Tracked Vessels</span><strong>24</strong><em>Near shore + offshore</em></div></article>
+      </section>
+
+      <section class="content-grid multipage buoys-page">
+        <section class="panel page-panel"><h2>Buoy fleet status</h2><div class="asset-grid"><article class="asset-card"><div class="asset-icon">⛯</div><div><h3>BUOY-01</h3><p>North Chennai relay node</p><dl><dt>Battery</dt><dd>84%</dd><dt>Signal</dt><dd>Strong</dd><dt>Status</dt><dd>Online</dd></dl></div><button class="ghost-btn" data-select-asset="BUOY-01">Inspect</button></article><article class="asset-card"><div class="asset-icon">⛯</div><div><h3>BUOY-02</h3><p>Restricted-zone watch</p><dl><dt>Battery</dt><dd>71%</dd><dt>Signal</dt><dd>Good</dd><dt>Status</dt><dd>Online</dd></dl></div><button class="ghost-btn" data-select-asset="BUOY-02">Inspect</button></article><article class="asset-card"><div class="asset-icon">⛯</div><div><h3>BUOY-03</h3><p>Weather sensor node</p><dl><dt>Battery</dt><dd>88%</dd><dt>Signal</dt><dd>Strong</dd><dt>Status</dt><dd>Online</dd></dl></div><button class="ghost-btn" data-select-asset="BUOY-03">Inspect</button></article><article class="asset-card"><div class="asset-icon">⛯</div><div><h3>BUOY-04</h3><p>Nagapattinam shore hop</p><dl><dt>Battery</dt><dd>76%</dd><dt>Signal</dt><dd>Good</dd><dt>Status</dt><dd>Online</dd></dl></div><button class="ghost-btn" data-select-asset="BUOY-04">Inspect</button></article><article class="asset-card"><div class="asset-icon">⛯</div><div><h3>BUOY-05</h3><p>Bay of Bengal relay</p><dl><dt>Battery</dt><dd>80%</dd><dt>Signal</dt><dd>Strong</dd><dt>Status</dt><dd>Online</dd></dl></div><button class="ghost-btn" data-select-asset="BUOY-05">Inspect</button></article><article class="asset-card"><div class="asset-icon">⛯</div><div><h3>BUOY-06</h3><p>High-wave advisory broadcast</p><dl><dt>Battery</dt><dd>69%</dd><dt>Signal</dt><dd>Fair</dd><dt>Status</dt><dd>Warning</dd></dl></div><button class="ghost-btn" data-select-asset="BUOY-06">Inspect</button></article><article class="asset-card"><div class="asset-icon">⛯</div><div><h3>BUOY-07</h3><p>Emergency relay standby</p><dl><dt>Battery</dt><dd>78%</dd><dt>Signal</dt><dd>Strong</dd><dt>Status</dt><dd>Online</dd></dl></div><button class="ghost-btn" data-select-asset="BUOY-07">Inspect</button></article><article class="asset-card"><div class="asset-icon">⛯</div><div><h3>BUOY-08</h3><p>Fishing zone F-12 gateway</p><dl><dt>Battery</dt><dd>82%</dd><dt>Signal</dt><dd>Strong</dd><dt>Status</dt><dd>Online</dd></dl></div><button class="ghost-btn" data-select-asset="BUOY-08">Inspect</button></article><article class="asset-card"><div class="asset-icon">⛯</div><div><h3>BUOY-09</h3><p>South mesh route</p><dl><dt>Battery</dt><dd>64%</dd><dt>Signal</dt><dd>Fair</dd><dt>Status</dt><dd>Maintenance</dd></dl></div><button class="ghost-btn" data-select-asset="BUOY-09">Inspect</button></article><article class="asset-card"><div class="asset-icon">⛯</div><div><h3>BUOY-10</h3><p>Offshore watch node</p><dl><dt>Battery</dt><dd>73%</dd><dt>Signal</dt><dd>Good</dd><dt>Status</dt><dd>Online</dd></dl></div><button class="ghost-btn" data-select-asset="BUOY-10">Inspect</button></article><article class="asset-card"><div class="asset-icon">⛯</div><div><h3>BUOY-11</h3><p>Vessel traffic relay</p><dl><dt>Battery</dt><dd>79%</dd><dt>Signal</dt><dd>Strong</dd><dt>Status</dt><dd>Online</dd></dl></div><button class="ghost-btn" data-select-asset="BUOY-11">Inspect</button></article><article class="asset-card"><div class="asset-icon">⛯</div><div><h3>BUOY-12</h3><p>Battery service due</p><dl><dt>Battery</dt><dd>55%</dd><dt>Signal</dt><dd>Weak</dd><dt>Status</dt><dd>Attention</dd></dl></div><button class="ghost-btn" data-select-asset="BUOY-12">Inspect</button></article></div></section>
+        <section class="panel buoy-link"><div class="panel-head"><h2>Selected Buoy Link ⓘ</h2><span class="online"><i></i> Online</span></div><div class="buoy-summary"><div class="buoy-avatar">⛯</div><strong id="selectedAsset">BUOY-07</strong><dl><dt>Signal Strength</dt><dd class="bars"><i></i><i></i><i></i><i></i><i></i><i></i></dd><dt>Battery</dt><dd>▰ 78%</dd><dt>Last Contact</dt><dd id="lastContact">09:42 IST</dd></dl></div><button class="relay-btn" id="relayBtn">⚠ Trigger Emergency Relay</button></section>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="assets/app.js"></script>
+</body>
+</html>

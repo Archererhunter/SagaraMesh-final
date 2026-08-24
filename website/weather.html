@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Marine Weather | SagaraMesh</title>
+  <meta name="description" content="SagaraMesh Tamil Nadu coastal operations dashboard prototype for fisherman SOS, buoy mesh, weather and rescue coordination." />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body data-page="weather">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <a class="brand" href="index.html" aria-label="SagaraMesh home">
+        <span class="brand-mark">⚓</span>
+        <span>SagaraMesh</span>
+      </a>
+      <nav class="nav-list">
+        <a class="nav-item " href="index.html"><span class="">⌂</span> Overview</a>
+        <a class="nav-item " href="map.html"><span class="">🗺</span> Map</a>
+        <a class="nav-item active" href="weather.html"><span class="">⛅</span> Weather</a>
+        <a class="nav-item " href="zones.html"><span class="">⚑</span> Fishing Zones</a>
+        <a class="nav-item " href="distress.html"><span class="sos-mini">SOS</span> Distress</a>
+        <a class="nav-item " href="buoys.html"><span class="">⛯</span> Buoys</a>
+        <a class="nav-item " href="messages.html"><span class="">✉</span> Messages</a>
+        <a class="nav-item " href="reports.html"><span class="">▣</span> Reports</a>
+        <a class="nav-item " href="settings.html"><span class="">⚙</span> Settings</a>
+      </nav>
+      <section class="location-card">
+        <strong>11°16′N / 79°51′E</strong>
+        <span>Local Time</span>
+        <small id="dateLabel">24 Aug 2026</small>
+        <b id="clock">09:42:31 IST</b>
+      </section>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="operation-select"><span>⌖</span> Tamil Nadu Coastal Safety Grid <span>⌄</span></div>
+        <label class="search-box">
+          <span class="sr-only">Search vessels, buoys, zones</span>
+          <input id="assetSearch" type="search" placeholder="Search vessels, buoys, zones..." autocomplete="off" />
+          <span>⌕</span>
+        </label>
+        <div class="system-pill"><i></i> All Systems Operational</div>
+        <button class="bell" aria-label="Notifications">♢<sup>3</sup></button>
+        <div class="operator"><span class="avatar">●</span><div><strong>Operator</strong><small>Coastal Control</small></div><span>⌄</span></div>
+      </header>
+
+      <section class="page-hero">
+        <div>
+          <span class="eyebrow">SagaraMesh Command Center</span>
+          <h1>Marine Weather</h1>
+        </div>
+        <a class="page-action" href="https://archererhunter.github.io/SagaraMesh-final/">Live Site</a>
+      </section>
+
+      <section class="status-row" aria-label="System summary">
+        <article class="stat-card weather-card"><div class="stat-icon sun">☀️</div><div><span>Sea Weather</span><strong>28°C</strong><em>Moderate Sea</em></div></article>
+        <article class="stat-card"><div class="stat-icon satellite">🛰</div><div><span>Mesh + Sat Link</span><strong class="green">Connected</strong><em>LoRa mesh • Inmarsat gateway 92%</em></div></article>
+        <article class="stat-card split"><div><span>Active Buoys</span><strong>12 / 14</strong><em class="green">Online</em></div><div><span>Tracked Vessels</span><strong>24</strong><em>Near shore + offshore</em></div></article>
+      </section>
+
+      <section class="content-grid multipage weather-page">
+        <section class="panel forecast"><h2>24-Hour Marine Weather Forecast</h2><div class="chart-legend"><span><i class="blue"></i> Wind Speed (km/h)</span><span><i class="cyan"></i> Wave Height (m)</span></div><svg class="chart" viewBox="0 0 720 220" aria-label="Marine forecast line chart"><g class="grid"><line x1="40" y1="20" x2="40" y2="180"/><line x1="40" y1="180" x2="690" y2="180"/><line x1="40" y1="126" x2="690" y2="126"/><line x1="40" y1="73" x2="690" y2="73"/><line x1="40" y1="20" x2="690" y2="20"/></g><polyline class="wind" points="80,126 160,116 240,104 320,90 400,94 480,110 560,124 640,120"/><polyline class="wave" points="80,157 160,148 240,139 320,130 400,134 480,145 560,154 640,157"/><g class="points"><circle cx="80" cy="126"/><circle cx="160" cy="116"/><circle cx="240" cy="104"/><circle cx="320" cy="90"/><circle cx="400" cy="94"/><circle cx="480" cy="110"/><circle cx="560" cy="124"/><circle cx="640" cy="120"/></g><g class="labels"><text x="62" y="205">09:00</text><text x="142" y="205">12:00</text><text x="222" y="205">15:00</text><text x="302" y="205">18:00</text><text x="382" y="205">21:00</text><text x="462" y="205">00:00</text><text x="542" y="205">03:00</text><text x="622" y="205">06:00</text></g><g class="values"><text x="72" y="116">22</text><text x="152" y="106">24</text><text x="232" y="94">26</text><text x="312" y="80">28</text><text x="392" y="84">27</text><text x="472" y="100">24</text><text x="552" y="114">22</text><text x="632" y="110">22</text><text class="cyan-text" x="72" y="148">1.2</text><text class="cyan-text" x="152" y="140">1.4</text><text class="cyan-text" x="232" y="131">1.6</text><text class="cyan-text" x="312" y="122">1.8</text></g></svg></section>
+        <section class="panel page-panel"><h2>Warnings and advisories</h2><div class="card-grid"><article class="info-card danger"><strong>High Wave Warning</strong><span>3.5 – 4.5 m significant wave height until 25 Aug 06:00 IST.</span></article><article class="info-card amber"><strong>Thunderstorm Advisory</strong><span>Gusty winds over Bay of Bengal; broadcast caution to F-10 and F-12.</span></article><article class="info-card"><strong>Safe Window</strong><span>Best return corridor: 15:30–18:30 near Cuddalore and Nagapattinam.</span></article></div></section>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="assets/app.js"></script>
+</body>
+</html>

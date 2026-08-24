@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fishing Zones | SagaraMesh</title>
+  <meta name="description" content="SagaraMesh Tamil Nadu coastal operations dashboard prototype for fisherman SOS, buoy mesh, weather and rescue coordination." />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body data-page="fishing-zones">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <a class="brand" href="index.html" aria-label="SagaraMesh home">
+        <span class="brand-mark">⚓</span>
+        <span>SagaraMesh</span>
+      </a>
+      <nav class="nav-list">
+        <a class="nav-item " href="index.html"><span class="">⌂</span> Overview</a>
+        <a class="nav-item " href="map.html"><span class="">🗺</span> Map</a>
+        <a class="nav-item " href="weather.html"><span class="">⛅</span> Weather</a>
+        <a class="nav-item active" href="zones.html"><span class="">⚑</span> Fishing Zones</a>
+        <a class="nav-item " href="distress.html"><span class="sos-mini">SOS</span> Distress</a>
+        <a class="nav-item " href="buoys.html"><span class="">⛯</span> Buoys</a>
+        <a class="nav-item " href="messages.html"><span class="">✉</span> Messages</a>
+        <a class="nav-item " href="reports.html"><span class="">▣</span> Reports</a>
+        <a class="nav-item " href="settings.html"><span class="">⚙</span> Settings</a>
+      </nav>
+      <section class="location-card">
+        <strong>11°16′N / 79°51′E</strong>
+        <span>Local Time</span>
+        <small id="dateLabel">24 Aug 2026</small>
+        <b id="clock">09:42:31 IST</b>
+      </section>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="operation-select"><span>⌖</span> Tamil Nadu Coastal Safety Grid <span>⌄</span></div>
+        <label class="search-box">
+          <span class="sr-only">Search vessels, buoys, zones</span>
+          <input id="assetSearch" type="search" placeholder="Search vessels, buoys, zones..." autocomplete="off" />
+          <span>⌕</span>
+        </label>
+        <div class="system-pill"><i></i> All Systems Operational</div>
+        <button class="bell" aria-label="Notifications">♢<sup>3</sup></button>
+        <div class="operator"><span class="avatar">●</span><div><strong>Operator</strong><small>Coastal Control</small></div><span>⌄</span></div>
+      </header>
+
+      <section class="page-hero">
+        <div>
+          <span class="eyebrow">SagaraMesh Command Center</span>
+          <h1>Fishing Zones</h1>
+        </div>
+        <a class="page-action" href="https://archererhunter.github.io/SagaraMesh-final/">Live Site</a>
+      </section>
+
+      <section class="status-row" aria-label="System summary">
+        <article class="stat-card weather-card"><div class="stat-icon sun">☀️</div><div><span>Sea Weather</span><strong>28°C</strong><em>Moderate Sea</em></div></article>
+        <article class="stat-card"><div class="stat-icon satellite">🛰</div><div><span>Mesh + Sat Link</span><strong class="green">Connected</strong><em>LoRa mesh • Inmarsat gateway 92%</em></div></article>
+        <article class="stat-card split"><div><span>Active Buoys</span><strong>12 / 14</strong><em class="green">Online</em></div><div><span>Tracked Vessels</span><strong>24</strong><em>Near shore + offshore</em></div></article>
+      </section>
+
+      <section class="content-grid multipage zones-page">
+        <section class="panel permission"><h2>Fishing Permission Status</h2><div class="permit-box"><div class="permit-head"><span>🛡</span><strong>Permitted until 18:30</strong><b>PERMITTED</b></div><dl><dt>Zone</dt><dd>Zone F-12</dd><dt>Coordinates</dt><dd>10°55′N – 11°25′N<br>79°30′E – 79°55′E</dd><dt>Valid Until</dt><dd>24 Aug 2026, 18:30 IST</dd></dl><p>✓ Compliant with coastal safety regulations</p></div></section>
+        <section class="panel page-panel"><h2>Zone registry</h2><div class="zone-list"><article><b>F-10</b><span>North offshore permitted zone</span><em>Open</em></article><article><b>F-12</b><span>Primary permitted fishing corridor</span><em>Open until 18:30</em></article><article><b>F-14</b><span>Southern coastal route</span><em>Open</em></article><article class="restricted-row"><b>R-04</b><span>Restricted storm risk area</span><em>Closed</em></article><article class="restricted-row"><b>IBL Watch</b><span>International boundary caution band</span><em>Alert</em></article></div></section>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="assets/app.js"></script>
+</body>
+</html>
