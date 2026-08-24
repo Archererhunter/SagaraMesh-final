@@ -108,9 +108,9 @@ SagaraMesh/
 
 ## Dashboard Prototype
 
-A static OceanGuard-inspired SagaraMesh coastal operations dashboard is available in `website/`. It is now split into separate pages for Overview, Map, Weather, Fishing Zones, Distress, Buoys, Messages, Reports, and Settings.
+A static OceanGuard-inspired SagaraMesh coastal operations dashboard is available in `website/`. It is now split into separate pages for Overview, Map, Weather, Fishing Zones, Distress, Buoys, Messages, Reports, and Settings. The map page uses **Leaflet + OpenStreetMap** for a real interactive basemap instead of a drawn mock map.
 
-For realtime data and persistent storage, run the open-source FastAPI + SQLite backend in `backend/`. It fetches open marine/weather data from Open-Meteo, stores telemetry/messages/incidents in SQLite, and streams updates to the dashboard over WebSocket.
+For realtime data and persistent storage, run the open-source FastAPI + SQLite backend in `backend/`. It fetches open marine/weather data from Open-Meteo, fetches open coastal-place data from OpenStreetMap/Overpass where available, stores telemetry/messages/incidents in SQLite, and streams updates to the dashboard over WebSocket.
 
 Preview static pages locally:
 

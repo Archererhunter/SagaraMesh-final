@@ -72,7 +72,60 @@ function selectAsset(id, silent = false) {
   if (batteryCell) batteryCell.textContent = `▰ ${data.battery}%`;
   const viewTitle = $('#viewTitle');
   if (viewTitle) viewTitle.textContent = `${data.type}: ${id}`;
+  if (window.sagaraLeafletMarkers?.[id]) {
+    window.sagaraLeafletMarkers[id].openPopup();
+    window.sagaraLeafletMap?.panTo(window.sagaraLeafletMarkers[id].getLatLng(), { animate: true });
+  }
   if (!silent) toast(`${id} selected — ${data.status}`);
+}
+
+function leafletIcon(asset) {
+  const label = asset.kind === 'distress' ? 'SOS' : asset.kind === 'vessel' ? '🚤' : '⛯';
+  const cls = asset.kind === 'distress' ? 'leaflet-sagara distress' : asset.kind === 'vessel' ? 'leaflet-sagara vessel' : 'leaflet-sagara buoy';
+  return L.divIcon({ className: cls, html: `<span>${label}</span>`, iconSize: [34, 34], iconAnchor: [17, 17], popupAnchor: [0, -16] });
+}
+
+function initRealMap() {
+  const mapCanvas = $('#mapCanvas');
+  if (!mapCanvas || typeof L === 'undefined' || window.sagaraLeafletMap) return;
+  mapCanvas.innerHTML = '<div id="realMap" class="real-map" role="application" aria-label="Real OpenStreetMap coastal map"></div><div class="map-source-badge">OpenStreetMap + Open-Meteo + SQLite telemetry</div>';
+  const map = L.map('realMap', { zoomControl: true, scrollWheelZoom: true }).setView([11.35, 79.85], 7);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+  window.sagaraLeafletMap = map;
+  window.sagaraLeafletMarkers = {};
+  const fishingZones = [
+    { name: 'F-12 permitted fishing corridor', color: '#28e37a', coords: [[11.05,79.55],[11.25,79.70],[11.18,80.00],[10.95,79.92]] },
+    { name: 'F-10 northern permitted zone', color: '#28e37a', coords: [[12.35,80.05],[12.75,80.10],[12.65,80.42],[12.25,80.34]] },
+    { name: 'Weather caution / restricted zone', color: '#f0333d', coords: [[10.75,80.05],[11.15,80.18],[10.95,80.55],[10.55,80.32]] }
+  ];
+  fishingZones.forEach(zone => L.polygon(zone.coords, { color: zone.color, fillColor: zone.color, fillOpacity: 0.12, weight: 2 }).bindPopup(zone.name).addTo(map));
+}
+
+function updateRealMap(data) {
+  if (!window.sagaraLeafletMap) initRealMap();
+  const map = window.sagaraLeafletMap;
+  if (!map || typeof L === 'undefined') return;
+  const markers = window.sagaraLeafletMarkers;
+  for (const asset of data.assets || []) {
+    if (!asset.lat || !asset.lon) continue;
+    const popup = `<strong>${asset.id}</strong><br>${asset.kind}<br>Battery: ${Math.round(asset.battery)}%<br>Status: ${asset.status}<br><small>Stored in SQLite • ${new Date(asset.updated_at).toLocaleString('en-IN')}</small>`;
+    if (markers[asset.id]) {
+      markers[asset.id].setLatLng([asset.lat, asset.lon]).setPopupContent(popup);
+    } else {
+      markers[asset.id] = L.marker([asset.lat, asset.lon], { icon: leafletIcon(asset) }).bindPopup(popup).addTo(map);
+      markers[asset.id].on('click', () => selectAsset(asset.id));
+    }
+  }
+  if (!window.sagaraOpenDataLayer) window.sagaraOpenDataLayer = L.layerGroup().addTo(map);
+  window.sagaraOpenDataLayer.clearLayers();
+  for (const place of data.open_data?.places || []) {
+    L.circleMarker([place.lat, place.lon], { radius: 6, color: '#ffc928', weight: 2, fillColor: '#ffc928', fillOpacity: 0.5 })
+      .bindPopup(`<strong>${place.name}</strong><br>${place.kind}<br><small>${place.source}</small>`)
+      .addTo(window.sagaraOpenDataLayer);
+  }
 }
 
 function bindDashboard() {
@@ -223,6 +276,7 @@ function applySnapshot(data) {
     }
   }
   const storedCount = data.storage?.messages ?? 0;
+  updateRealMap(data);
   setRealtimeStatus(`Realtime + SQLite connected • ${storedCount} stored messages`, true);
 }
 
@@ -269,6 +323,7 @@ updateClock();
 setInterval(updateClock, 1000);
 bindDashboard();
 selectAsset('BUOY-07', true);
+initRealMap();
 connectRealtime();
 const initialTitle = $('#viewTitle');
 if (initialTitle && document.body.dataset.page === 'overview') initialTitle.textContent = 'Live Maritime Map';

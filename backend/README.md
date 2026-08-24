@@ -10,6 +10,8 @@ Open-source / open-data defaults:
 - **SQLite** for local persistent storage
 - **Open-Meteo Marine API** for open marine forecast data
 - **Open-Meteo Forecast API** for open wind/temperature data
+- **OpenStreetMap tiles via Leaflet** for the real interactive map
+- **OpenStreetMap Overpass API** for open coastal places such as harbours, ports, lighthouses and ferry terminals
 - Browser-native WebSocket/fetch APIs for realtime updates
 
 Other possible sources later:

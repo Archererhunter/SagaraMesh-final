@@ -24,6 +24,7 @@ DB_PATH = DATA_DIR / "sagaramesh.sqlite3"
 WEBSITE_DIR = ROOT / "website"
 OPEN_METEO_MARINE = "https://marine-api.open-meteo.com/v1/marine"
 OPEN_METEO_FORECAST = "https://api.open-meteo.com/v1/forecast"
+OVERPASS_URLS = ["https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter"]
 DEFAULT_LAT = float(os.getenv("SAGARAMESH_LAT", "11.75"))
 DEFAULT_LON = float(os.getenv("SAGARAMESH_LON", "79.77"))
 
@@ -99,6 +100,12 @@ def init_db() -> None:
               lon real not null,
               payload text not null
             );
+            create table if not exists open_data_cache (
+              key text primary key,
+              ts text not null,
+              source text not null,
+              payload text not null
+            );
             """
         )
         for asset_id, asset in SEED_ASSETS.items():
@@ -127,6 +134,7 @@ def snapshot() -> dict[str, Any]:
     assets = rows("select * from assets order by id")
     incidents = rows("select * from incidents order by created_at desc")
     latest_weather = row("select * from weather_snapshots order by id desc limit 1")
+    open_data = row("select * from open_data_cache where key='tamil_nadu_coast_places'")
     messages = rows("select * from messages order by id desc limit 20")
     return {
         "ts": now_iso(),
@@ -134,6 +142,7 @@ def snapshot() -> dict[str, Any]:
         "assets": assets,
         "incidents": incidents,
         "weather": json.loads(latest_weather["payload"]) if latest_weather else None,
+        "open_data": json.loads(open_data["payload"]) if open_data else None,
         "messages": messages,
     }
 
@@ -163,6 +172,72 @@ async def fetch_weather(lat: float = DEFAULT_LAT, lon: float = DEFAULT_LON) -> d
     return payload
 
 
+REAL_TN_COASTAL_PLACES = [
+    {"name": "Chennai Port", "kind": "port", "lat": 13.1067, "lon": 80.2936, "source": "curated public coordinates"},
+    {"name": "Ennore / Kamarajar Port", "kind": "port", "lat": 13.2639, "lon": 80.3464, "source": "curated public coordinates"},
+    {"name": "Cuddalore Harbour", "kind": "harbour", "lat": 11.7084, "lon": 79.7787, "source": "curated public coordinates"},
+    {"name": "Nagapattinam Harbour", "kind": "harbour", "lat": 10.7656, "lon": 79.8496, "source": "curated public coordinates"},
+    {"name": "Karaikal Port", "kind": "port", "lat": 10.8365, "lon": 79.8499, "source": "curated public coordinates"},
+    {"name": "Pamban / Rameswaram Fishing Coast", "kind": "fishing coast", "lat": 9.2795, "lon": 79.2117, "source": "curated public coordinates"},
+    {"name": "Thoothukudi / V.O.C. Port", "kind": "port", "lat": 8.7510, "lon": 78.1994, "source": "curated public coordinates"},
+    {"name": "Kanniyakumari Fishing Harbour", "kind": "harbour", "lat": 8.0883, "lon": 77.5385, "source": "curated public coordinates"},
+]
+
+
+async def fetch_open_coastal_places() -> dict[str, Any]:
+    query = """
+    [out:json][timeout:20];
+    (
+      node["harbour"](8.0,77.4,13.5,80.5);
+      way["harbour"](8.0,77.4,13.5,80.5);
+      node["seamark:type"="harbour"](8.0,77.4,13.5,80.5);
+      node["man_made"="lighthouse"](8.0,77.4,13.5,80.5);
+      node["amenity"="ferry_terminal"](8.0,77.4,13.5,80.5);
+    );
+    out center tags 60;
+    """
+    places: list[dict[str, Any]] = []
+    source = "OpenStreetMap Overpass API"
+    last_error = None
+    for overpass_url in OVERPASS_URLS:
+        try:
+            async with httpx.AsyncClient(timeout=25) as client:
+                response = await client.post(overpass_url, data={"data": query})
+                response.raise_for_status()
+            for element in response.json().get("elements", []):
+                tags = element.get("tags", {})
+                lat = element.get("lat") or element.get("center", {}).get("lat")
+                lon = element.get("lon") or element.get("center", {}).get("lon")
+                name = tags.get("name") or tags.get("seamark:name")
+                if lat is None or lon is None or not name:
+                    continue
+                places.append({
+                    "name": name,
+                    "kind": tags.get("harbour") or tags.get("seamark:type") or tags.get("man_made") or tags.get("amenity") or "coastal place",
+                    "lat": lat,
+                    "lon": lon,
+                    "source": f"{source} ({overpass_url})",
+                    "osm_id": element.get("id"),
+                })
+            if places:
+                break
+        except Exception as exc:
+            last_error = exc
+    if not places:
+        places = [{**place, "fallback_reason": str(last_error)} for place in REAL_TN_COASTAL_PLACES]
+        source = "curated public coordinates fallback; Overpass unavailable"
+    if len(places) < 4:
+        existing_names = {p["name"] for p in places}
+        places.extend([place for place in REAL_TN_COASTAL_PLACES if place["name"] not in existing_names])
+    payload = {"source": source, "fetched_at": now_iso(), "places": places[:40]}
+    with connect() as conn:
+        conn.execute(
+            "insert or replace into open_data_cache(key, ts, source, payload) values(?,?,?,?)",
+            ("tamil_nadu_coast_places", now_iso(), source, json.dumps(payload)),
+        )
+    return payload
+
+
 async def simulator() -> None:
     while True:
         await asyncio.sleep(8)
@@ -185,6 +260,7 @@ async def lifespan(app: FastAPI):
     init_db()
     try:
         await fetch_weather()
+        await fetch_open_coastal_places()
     except Exception:
         pass
     task = asyncio.create_task(simulator())
@@ -200,7 +276,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=False,
 
 @app.get("/api/health")
 def health():
-    return {"ok": True, "ts": now_iso(), "storage": str(DB_PATH), "open_source_sources": ["Open-Meteo Marine API", "SQLite", "FastAPI"]}
+    return {"ok": True, "ts": now_iso(), "storage": str(DB_PATH), "open_source_sources": ["OpenStreetMap tiles", "OpenStreetMap Overpass API", "Open-Meteo Marine API", "SQLite", "FastAPI"]}
 
 
 @app.get("/api/snapshot")
@@ -236,6 +312,14 @@ def latest_telemetry(limit: int = 50):
 @app.get("/api/weather/current")
 async def current_weather(lat: float = DEFAULT_LAT, lon: float = DEFAULT_LON):
     return await fetch_weather(lat, lon)
+
+
+@app.get("/api/open-data/coastal-places")
+async def open_data_coastal_places(refresh: bool = False):
+    cached = row("select * from open_data_cache where key='tamil_nadu_coast_places'")
+    if refresh or not cached:
+        return await fetch_open_coastal_places()
+    return json.loads(cached["payload"])
 
 
 @app.post("/api/messages")
