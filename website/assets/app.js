@@ -114,8 +114,10 @@ function bindDashboard() {
         return;
       }
       addTimeline(`Message sent to ${asset}`, text);
+      storeMessage(asset, text)
+        .then(() => toast(`Message stored in SQLite and queued to ${asset}`))
+        .catch(() => toast(`Message queued locally; backend storage offline for ${asset}`));
       input.value = '';
-      toast(`Message queued through SagaraMesh relay to ${asset}`);
     });
   }
 
@@ -123,10 +125,11 @@ function bindDashboard() {
   if (respondBtn) {
     respondBtn.addEventListener('click', () => {
       addTimeline('Rescue response acknowledged', 'TN-09-FB-214 assigned to nearest buoy relay', 'warn');
+      ackIncident().catch(() => {});
       selectAsset('TN-09-FB-214');
       respondBtn.textContent = 'Acknowledged';
       respondBtn.disabled = true;
-      toast('Distress response acknowledged and logged.');
+      toast('Distress response acknowledged and stored when backend is online.');
     });
   }
 
@@ -166,14 +169,106 @@ function bindDashboard() {
   }
 
   const saveSettingsBtn = $('#saveSettingsBtn');
-  if (saveSettingsBtn) {
-    saveSettingsBtn.addEventListener('click', () => toast('Settings saved in prototype mode.'));
+  const apiBaseInput = $('#apiBaseInput');
+  if (apiBaseInput) {
+    apiBaseInput.value = localStorage.getItem('sagaramesh_api_base') || defaultApiBase();
   }
+  if (saveSettingsBtn) {
+    saveSettingsBtn.addEventListener('click', () => {
+      if (apiBaseInput) localStorage.setItem('sagaramesh_api_base', apiBaseInput.value.trim() || defaultApiBase());
+      toast('Settings saved. Realtime backend URL stored in this browser.');
+      connectRealtime(true);
+    });
+  }
+}
+
+function defaultApiBase() {
+  if (location.hostname === '127.0.0.1' || location.hostname === 'localhost') return location.origin;
+  return localStorage.getItem('sagaramesh_api_base') || 'http://127.0.0.1:8000';
+}
+
+function apiBase() {
+  return (localStorage.getItem('sagaramesh_api_base') || defaultApiBase()).replace(/\/$/, '');
+}
+
+function setRealtimeStatus(text, ok = false) {
+  let badge = $('#realtimeStatus');
+  if (!badge) {
+    badge = document.createElement('div');
+    badge.id = 'realtimeStatus';
+    badge.className = 'realtime-status';
+    $('.topbar')?.appendChild(badge);
+  }
+  badge.textContent = text;
+  badge.classList.toggle('online', ok);
+}
+
+function applySnapshot(data) {
+  if (!data) return;
+  const onlineAssets = data.assets?.filter(a => a.status === 'online').length ?? 0;
+  const totalAssets = data.assets?.length ?? 0;
+  const statCards = $$('.stat-card strong');
+  if (statCards[2] && totalAssets) statCards[2].textContent = `${onlineAssets} / ${totalAssets}`;
+  const latestWeather = data.weather;
+  const temp = latestWeather?.forecast?.current?.temperature_2m;
+  const wave = latestWeather?.marine?.current?.wave_height;
+  if (statCards[0] && temp !== undefined) statCards[0].textContent = `${Math.round(temp)}°C`;
+  const weatherEm = $('.weather-card em');
+  if (weatherEm && wave !== undefined) weatherEm.textContent = `Wave height ${wave} m • Open-Meteo`;
+  for (const asset of data.assets || []) {
+    if (assets[asset.id]) {
+      assets[asset.id].battery = Math.round(asset.battery);
+      assets[asset.id].contact = new Date(asset.updated_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) + ' IST';
+      assets[asset.id].status = asset.status;
+    }
+  }
+  const storedCount = data.storage?.messages ?? 0;
+  setRealtimeStatus(`Realtime + SQLite connected • ${storedCount} stored messages`, true);
+}
+
+async function fetchSnapshot() {
+  const response = await fetch(`${apiBase()}/api/snapshot`);
+  if (!response.ok) throw new Error(`snapshot ${response.status}`);
+  applySnapshot(await response.json());
+}
+
+let realtimeSocket;
+function connectRealtime(force = false) {
+  if (realtimeSocket && !force) return;
+  if (realtimeSocket) realtimeSocket.close();
+  fetchSnapshot().catch(() => setRealtimeStatus('Demo mode • backend offline', false));
+  const wsUrl = `${apiBase().replace(/^http/, 'ws')}/ws`;
+  try {
+    realtimeSocket = new WebSocket(wsUrl);
+    realtimeSocket.onopen = () => setRealtimeStatus('Realtime backend connected', true);
+    realtimeSocket.onmessage = event => applySnapshot(JSON.parse(event.data));
+    realtimeSocket.onerror = () => setRealtimeStatus('Demo mode • backend offline', false);
+    realtimeSocket.onclose = () => setTimeout(() => connectRealtime(true), 8000);
+  } catch (_) {
+    setRealtimeStatus('Demo mode • backend offline', false);
+  }
+}
+
+async function storeMessage(target, body) {
+  const response = await fetch(`${apiBase()}/api/messages`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ target, body })
+  });
+  if (!response.ok) throw new Error(`message ${response.status}`);
+  return response.json();
+}
+
+async function ackIncident() {
+  const response = await fetch(`${apiBase()}/api/incidents/INC-2026-0824-001/ack`, { method: 'POST' });
+  if (!response.ok) throw new Error(`ack ${response.status}`);
+  return response.json();
 }
 
 updateClock();
 setInterval(updateClock, 1000);
 bindDashboard();
 selectAsset('BUOY-07', true);
+connectRealtime();
 const initialTitle = $('#viewTitle');
 if (initialTitle && document.body.dataset.page === 'overview') initialTitle.textContent = 'Live Maritime Map';

@@ -110,7 +110,9 @@ SagaraMesh/
 
 A static OceanGuard-inspired SagaraMesh coastal operations dashboard is available in `website/`. It is now split into separate pages for Overview, Map, Weather, Fishing Zones, Distress, Buoys, Messages, Reports, and Settings.
 
-Preview locally:
+For realtime data and persistent storage, run the open-source FastAPI + SQLite backend in `backend/`. It fetches open marine/weather data from Open-Meteo, stores telemetry/messages/incidents in SQLite, and streams updates to the dashboard over WebSocket.
+
+Preview static pages locally:
 
 ```bash
 cd website
@@ -118,6 +120,17 @@ python3 -m http.server 4173 --bind 0.0.0.0
 ```
 
 Then open `http://127.0.0.1:4173/`.
+
+Run the realtime backend locally:
+
+```bash
+cd /root/SagaraMesh-final
+python3 -m venv .venv
+.venv/bin/python -m pip install -r backend/requirements.txt
+.venv/bin/python -m uvicorn backend.app:app --host 127.0.0.1 --port 8000
+```
+
+Then open `http://127.0.0.1:8000/`.
 
 ## Status
 
