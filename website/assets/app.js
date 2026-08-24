@@ -90,10 +90,23 @@ function initRealMap() {
   if (!mapCanvas || typeof L === 'undefined' || window.sagaraLeafletMap) return;
   mapCanvas.innerHTML = '<div id="realMap" class="real-map" role="application" aria-label="Real OpenStreetMap coastal map"></div><div class="map-source-badge">OpenStreetMap + Open-Meteo + SQLite telemetry</div>';
   const map = L.map('realMap', { zoomControl: true, scrollWheelZoom: true }).setView([11.35, 79.85], 7);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
+  const baseLayers = {
+    'OpenStreetMap Standard': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }),
+    'OpenStreetMap HOT': L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors, Tiles style by HOT'
+    }),
+    'OpenTopoMap': L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+      maxZoom: 17,
+      attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM | Style: &copy; OpenTopoMap'
+    })
+  };
+  baseLayers['OpenStreetMap Standard'].addTo(map);
+  L.control.layers(baseLayers, null, { position: 'topright' }).addTo(map);
+  setTimeout(() => map.invalidateSize(), 150);
   window.sagaraLeafletMap = map;
   window.sagaraLeafletMarkers = {};
   const fishingZones = [
