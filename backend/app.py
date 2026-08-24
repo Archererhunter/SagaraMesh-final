@@ -162,8 +162,8 @@ class MessageIn(BaseModel):
 
 async def fetch_weather(lat: float = DEFAULT_LAT, lon: float = DEFAULT_LON) -> dict[str, Any]:
     async with httpx.AsyncClient(timeout=12) as client:
-        marine_req = client.get(OPEN_METEO_MARINE, params={"latitude": lat, "longitude": lon, "current": "wave_height,wind_wave_height,wind_wave_direction,wind_wave_period,swell_wave_height", "timezone": "Asia/Kolkata"})
-        forecast_req = client.get(OPEN_METEO_FORECAST, params={"latitude": lat, "longitude": lon, "current": "temperature_2m,wind_speed_10m,wind_direction_10m", "timezone": "Asia/Kolkata"})
+        marine_req = client.get(OPEN_METEO_MARINE, params={"latitude": lat, "longitude": lon, "current": "wave_height,wind_wave_height,wind_wave_direction,wind_wave_period,swell_wave_height", "hourly": "wave_height,wind_wave_height,swell_wave_height,wave_period", "forecast_days": 3, "timezone": "Asia/Kolkata"})
+        forecast_req = client.get(OPEN_METEO_FORECAST, params={"latitude": lat, "longitude": lon, "current": "temperature_2m,wind_speed_10m,wind_direction_10m", "daily": "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant", "forecast_days": 3, "timezone": "Asia/Kolkata"})
         marine, forecast = await asyncio.gather(marine_req, forecast_req)
         marine.raise_for_status(); forecast.raise_for_status()
     payload = {"source": "Open-Meteo Marine + Forecast", "lat": lat, "lon": lon, "marine": marine.json(), "forecast": forecast.json(), "fetched_at": now_iso()}
