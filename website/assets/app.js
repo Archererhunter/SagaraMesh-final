@@ -177,6 +177,20 @@ function updateRealMap(data) {
 }
 
 function bindDashboard() {
+  const projectVideo = $('#projectVideo');
+  if (projectVideo) {
+    const defaultRate = Number(projectVideo.dataset.defaultRate || '0.5');
+    const applyDefaultRate = () => {
+      projectVideo.defaultPlaybackRate = defaultRate;
+      projectVideo.playbackRate = defaultRate;
+    };
+    applyDefaultRate();
+    projectVideo.addEventListener('loadedmetadata', applyDefaultRate, { once: true });
+    projectVideo.addEventListener('play', () => {
+      if (projectVideo.playbackRate !== defaultRate) projectVideo.playbackRate = defaultRate;
+    }, { once: true });
+  }
+
   $$('.marker').forEach(marker => {
     marker.addEventListener('click', () => selectAsset(marker.dataset.id));
   });
