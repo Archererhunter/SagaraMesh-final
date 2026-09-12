@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Poseidon Video | SagaraMesh</title>
+  <meta name="description" content="Playable Project Poseidon video for the SagaraMesh ocean safety and rescue mesh project." />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQfQm9GBAwbb4db7+HvI2GNNhWsK2hY=" crossorigin="" />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body data-page="video">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <a class="brand" href="index.html" aria-label="SagaraMesh home">
+        <span class="brand-mark">⚓</span>
+        <span>SagaraMesh</span>
+      </a>
+      <nav class="nav-list">
+        <a class="nav-item " href="index.html"><span class="">⌂</span> Overview</a>
+        <a class="nav-item " href="map.html"><span class="">🗺</span> Map</a>
+        <a class="nav-item " href="weather.html"><span class="">⛅</span> Weather</a>
+        <a class="nav-item " href="zones.html"><span class="">⚑</span> Fishing Zones</a>
+        <a class="nav-item " href="distress.html"><span class="sos-mini">SOS</span> Distress</a>
+        <a class="nav-item " href="buoys.html"><span class="">⛯</span> Buoys</a>
+        <a class="nav-item " href="messages.html"><span class="">✉</span> Messages</a>
+        <a class="nav-item " href="reports.html"><span class="">▣</span> Reports</a>
+        <a class="nav-item " href="settings.html"><span class="">⚙</span> Settings</a>
+        <a class="nav-item active" href="video.html"><span class="">▶</span> Project Video</a>
+      </nav>
+      <section class="location-card">
+        <strong>Project Poseidon</strong>
+        <span>Video Brief</span>
+        <small>Smart ocean rescue mesh</small>
+        <b>SagaraMesh</b>
+      </section>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="operation-select"><span>⌖</span> Tamil Nadu Coastal Safety Grid <span>⌄</span></div>
+        <label class="search-box">
+          <span class="sr-only">Search vessels, buoys, zones</span>
+          <input id="assetSearch" type="search" placeholder="Search vessels, buoys, zones..." autocomplete="off" />
+          <span>⌕</span>
+        </label>
+        <div class="system-pill"><i></i> Video Ready</div>
+        <button class="bell" aria-label="Notifications">♢<sup>1</sup></button>
+        <div class="operator"><span class="avatar">●</span><div><strong>Operator</strong><small>Coastal Control</small></div><span>⌄</span></div>
+      </header>
+
+      <section class="page-hero video-hero">
+        <div>
+          <span class="eyebrow">SagaraMesh — Project Poseidon</span>
+          <h1>Project Video</h1>
+        </div>
+        <a class="page-action" href="https://github.com/Archererhunter/SagaraMesh-final/blob/main/Project%20Poseidon.mp4" target="_blank" rel="noreferrer">Open on GitHub</a>
+      </section>
+
+      <section class="content-grid video-page">
+        <section class="panel video-panel">
+          <div class="panel-head">
+            <h2>Playable Project Poseidon Demo Video</h2>
+            <span class="online"><i></i> MP4</span>
+          </div>
+          <div class="video-frame">
+            <video controls preload="metadata" poster="" playsinline>
+              <source src="https://cdn.jsdelivr.net/gh/Archererhunter/SagaraMesh-final@main/Project%20Poseidon.mp4" type="video/mp4" />
+              <source src="https://raw.githubusercontent.com/Archererhunter/SagaraMesh-final/main/Project%20Poseidon.mp4" type="video/mp4" />
+              Your browser does not support the video tag. Use the download button below.
+            </video>
+          </div>
+          <div class="video-actions">
+            <a class="page-action" href="https://cdn.jsdelivr.net/gh/Archererhunter/SagaraMesh-final@main/Project%20Poseidon.mp4" target="_blank" rel="noreferrer">Play Direct MP4</a>
+            <a class="page-action ghost-video" href="https://raw.githubusercontent.com/Archererhunter/SagaraMesh-final/main/Project%20Poseidon.mp4" target="_blank" rel="noreferrer">Raw File</a>
+          </div>
+        </section>
+
+        <aside class="panel video-info-panel">
+          <div class="panel-head"><h2>About This Video</h2></div>
+          <article class="info-card">
+            <strong>Project</strong>
+            <span>SagaraMesh — Project Poseidon</span>
+          </article>
+          <article class="info-card">
+            <strong>Concept</strong>
+            <span>Smart ocean safety, communication and rescue mesh for fishermen.</span>
+          </article>
+          <article class="info-card">
+            <strong>Core Flow</strong>
+            <span>Boat SOS → Smart buoy → Buoy mesh relay → Shore dashboard → Rescue response.</span>
+          </article>
+          <article class="info-card">
+            <strong>Safe Claim</strong>
+            <span>5–10 km LoRa range per hop target in open-sea line-of-sight prototype conditions.</span>
+          </article>
+        </aside>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
